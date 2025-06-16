@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_2025/slider_provider.dart';
+
 
 // create a State Provider because change the state
 final counter = StateProvider<int>((ref){
@@ -22,35 +24,29 @@ class HomeScreen extends ConsumerWidget {
         title: const Text("Counter App"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Consumer(
+            builder: (context , ref, child){
+              final slider = ref.watch(sliderProvider);
+              return Container(
+                height: 200,
+                width: 200,
+                color: Colors.red.withOpacity(slider),
+              );
+            },
 
-          Consumer(builder: (context , ref , child){
-            print("build 2");
-            final count = ref.watch(counter);
-            return Center(
-              child: Text(count.toString() , style: TextStyle(fontSize: 30, color: Colors.red),),
-            );
-          }),
+          ),
+          Consumer(
+            builder: (context , ref, child){
+              final slider = ref.watch(sliderProvider);
+              return Slider(value: slider, onChanged: (value){
+                ref.read(sliderProvider.notifier).state = value;
+              },);
+            },
 
-          Consumer(builder: (context , ref , child){
-            print("build 3 switch");
-            final count = ref.watch(myswitch);
-            return Switch(value: count, onChanged: (value){
-              ref.read(myswitch.notifier).state = value;
-            });
-          }),
+          ),
 
-          Row(
-            children: [
-              ElevatedButton(onPressed: (){
-                ref.read(counter.notifier).state++;
-              }, child: Text("+", style: TextStyle(fontSize: 30, color: Colors.red),)),
-              SizedBox(width: 10,),
-              ElevatedButton(onPressed: (){
-                ref.read(counter.notifier).state--;
-              }, child: Text("-", style: TextStyle(fontSize: 30, color: Colors.green),))
-            ],
-          )
         ],
       ),
     );
