@@ -28,7 +28,27 @@ class HomeScreen extends ConsumerWidget {
         children: [
           Consumer(
             builder: (context , ref, child){
-              final slider = ref.watch(sliderProvider);
+              print("showPassword");
+              final slider = ref.watch(sliderProvider.select((state)=>state.showPassword));
+              return InkWell(
+                onTap: (){
+                  final stateProvider = ref.read(sliderProvider.notifier);
+                  stateProvider.state = stateProvider.state.copyWith(showPassword: !slider);
+                },
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  child: slider ? Icon(Icons.remove_red_eye) : Icon(Icons.image),
+                ),
+              );
+            },
+
+          ),
+
+          Consumer(
+            builder: (context , ref, child){
+              print("sliders");
+              final slider = ref.watch(sliderProvider.select((state)=>state.slider));
               return Container(
                 height: 200,
                 width: 200,
@@ -39,9 +59,10 @@ class HomeScreen extends ConsumerWidget {
           ),
           Consumer(
             builder: (context , ref, child){
-              final slider = ref.watch(sliderProvider);
+              final slider = ref.watch(sliderProvider.select((state)=>state.slider));
               return Slider(value: slider, onChanged: (value){
-                ref.read(sliderProvider.notifier).state = value;
+                final stateProvider = ref.read(sliderProvider.notifier);
+                stateProvider.state = stateProvider.state.copyWith(slider: value);
               },);
             },
 
