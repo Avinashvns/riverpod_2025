@@ -1,28 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// read a constant value and create a provider
-final data = Provider<String>((ref){
-  return "Avinash";
+// create a State Provider because change the state
+final counter = StateProvider<int>((ref){
+  return 0;
 });
 
-final age = Provider<int>((ref){
-  return 30;
-});
-
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    final name = ref.watch(data);
-    final myage = ref.watch(age);
-    return Scaffold(body: Center(child: Text(name + "and age : " + myage.toString()
-        , style:TextStyle(fontSize: 30 , color: Colors.red))));
+  Widget build(BuildContext context , WidgetRef ref) {
+    final count = ref.watch(counter);
+    print("build");
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Counter App"),
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: Text(count.toString() , style: TextStyle(fontSize: 30, color: Colors.red),),
+          ),
+          Row(
+            children: [
+              ElevatedButton(onPressed: (){
+                ref.read(counter.notifier).state++;
+              }, child: Text("+", style: TextStyle(fontSize: 30, color: Colors.red),)),
+              SizedBox(width: 10,),
+              ElevatedButton(onPressed: (){
+                ref.read(counter.notifier).state--;
+              }, child: Text("-", style: TextStyle(fontSize: 30, color: Colors.green),))
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
