@@ -6,11 +6,11 @@ final data = Provider<String>((ref){
   return "Avinash";
 });
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context , WidgetRef ref) {
     return const Scaffold(body: Center(child: Text("Welcome")));
   }
 }
