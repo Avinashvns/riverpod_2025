@@ -11,7 +11,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context , WidgetRef ref) {
-    final count = ref.watch(counter);
+
     print("build");
     return Scaffold(
       appBar: AppBar(
@@ -19,9 +19,15 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          Center(
-            child: Text(count.toString() , style: TextStyle(fontSize: 30, color: Colors.red),),
-          ),
+
+          Consumer(builder: (context , ref , child){
+            print("build 2");
+            final count = ref.watch(counter);
+            return Center(
+              child: Text(count.toString() , style: TextStyle(fontSize: 30, color: Colors.red),),
+            );
+          }),
+
           Row(
             children: [
               ElevatedButton(onPressed: (){
