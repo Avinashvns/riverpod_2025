@@ -6,6 +6,10 @@ final counter = StateProvider<int>((ref){
   return 0;
 });
 
+final myswitch = StateProvider<bool>((ref){
+  return false;
+});
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -26,6 +30,14 @@ class HomeScreen extends ConsumerWidget {
             return Center(
               child: Text(count.toString() , style: TextStyle(fontSize: 30, color: Colors.red),),
             );
+          }),
+
+          Consumer(builder: (context , ref , child){
+            print("build 3 switch");
+            final count = ref.watch(myswitch);
+            return Switch(value: count, onChanged: (value){
+              ref.read(myswitch.notifier).state = value;
+            });
           }),
 
           Row(
