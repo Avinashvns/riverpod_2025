@@ -6,12 +6,18 @@ final data = Provider<String>((ref){
   return "Avinash";
 });
 
+final age = Provider<int>((ref){
+  return 30;
+});
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context , WidgetRef ref) {
     final name = ref.watch(data);
-    return Scaffold(body: Center(child: Text(name , style:TextStyle(fontSize: 30))));
+    final myage = ref.watch(age);
+    return Scaffold(body: Center(child: Text(name + "and age : " + myage.toString()
+        , style:TextStyle(fontSize: 30))));
   }
 }
