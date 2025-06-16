@@ -12,6 +12,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context , WidgetRef ref) {
     final name = ref.watch(data);
-    return const Scaffold(body: Center(child: Text("Welcome")));
+    return Scaffold(body: Center(child: Text(name , style:TextStyle(fontSize: 30))));
   }
 }
