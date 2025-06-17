@@ -31,12 +31,22 @@ class HomeScreen extends ConsumerWidget {
           ),
           Consumer(
             builder: (context, ref, child) {
-              final search = ref.watch(searchProvider);
+              final search = ref.watch((searchProvider).select((state)=>state.search));
               print("Consumer called");
               return Text(
                 search,
                 style: TextStyle(fontSize: 30, color: Colors.red),
               );
+            },
+          ),
+
+          Consumer(
+            builder: (context, ref, child) {
+              final search = ref.watch((searchProvider).select((state)=>state.isChange));
+              print("Consumer Switch called");
+              return Switch(value: search, onChanged: (value){
+                ref.read(searchProvider.notifier).onChange(value);
+              });
             },
           ),
         ],
