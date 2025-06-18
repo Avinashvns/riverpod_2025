@@ -22,7 +22,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final result = ref.watch(multiplierProvider(10));
+    Map<String, dynamic> map = { 'id': 6 };
+    final result = ref.watch(multiplierProvider(map));
     print("build");
     return Scaffold(
       appBar: AppBar(title: const Text("Stream Provider")),
