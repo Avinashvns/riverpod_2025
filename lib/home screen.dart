@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_2025/item_provider.dart';
+import 'package:riverpod_2025/provider/favourite_provider.dart';
 import 'package:riverpod_2025/search_provider.dart';
 import 'package:riverpod_2025/slider_provider.dart';
 
@@ -18,45 +19,54 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final item = ref.watch(itemProvider);
+    final favouriteList = ref.watch(favouriteProvider);
     print("build");
     return Scaffold(
-      appBar: AppBar(title: const Text("Counter App")),
+      appBar: AppBar(title: const Text("Counter App"),
+      actions: [
+        PopupMenuButton<String>(
+          onSelected: (value){
+            ref.read(favouriteProvider.notifier).favourite(value);
+          },
+            itemBuilder: (BuildContext context){
+            return const [
+              PopupMenuItem(child: Text("All"), value: 'All',),
+              PopupMenuItem(child: Text("Favourite"), value: 'Favourite',),
+            ];
+            }
+        )
+      ],),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(itemProvider.notifier).addItem('New Item');
+          ref.read(favouriteProvider.notifier).addMyItem();
         },
         child: const Icon(Icons.add),
       ),
       body:
-          item.isEmpty
-              ? Center(child: Text("No Data"))
-              : ListView.builder(
-                itemCount: item.length,
-                itemBuilder: (context, index) {
-                  final itemDetails = item[index];
-                  return ListTile(
-                    title: Text(itemDetails.name),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: (){
-                            ref.read(itemProvider.notifier).updateItem(itemDetails.id , "updated item");
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: (){
-                            ref.read(itemProvider.notifier).deleteItem(itemDetails.id);
-                          },
-                        )
-                      ],
-                    ),
-                  );
+          Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: OutlineInputBorder()
+                ),
+                onChanged: (value){
+                  ref.read(favouriteProvider.notifier).filterList(value);
                 },
               ),
+              Expanded(child: ListView.builder(
+                itemCount: favouriteList.filterItems.length,
+                  itemBuilder: (context, index){
+                    final item = favouriteList.filterItems[index];
+                    return ListTile(
+                      title: Text(item.name),
+                      trailing: Icon(item.favourite ? Icons.favorite : Icons.favorite_border),
+                    );
+                  }
+              ))
+            ],
+          ),
     );
   }
 }
