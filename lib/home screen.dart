@@ -23,17 +23,29 @@ class HomeScreen extends ConsumerWidget {
     final provider = ref.watch(futureProvider);
     print("build");
     return Scaffold(
-      appBar: AppBar(title: const Text("Future Provider"),
-     ),
-
+      appBar: AppBar(title: const Text("Future Provider")),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          ref.invalidate(futureProvider);
+        },
+        child: Icon(Icons.add),
+      ),
 
       body: Center(
         child: provider.when(
-          data: (value)=> Text(value.toString()),
-          error: (error,stack) => Text(error.toString()),
-          loading: ()=> const CircularProgressIndicator()
+          skipLoadingOnRefresh: false,
+          data:
+              (value) => ListView.builder(
+                itemCount: value.length,
+                itemBuilder: (context, index) {
+                  return Text(value[index].toString());
+                },
+              ),
+          error: (error, stack) => Text(error.toString()),
+          loading: () => const CircularProgressIndicator(),
         ),
       ),
     );
+
   }
 }
