@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_2025/future_provider/family_provider.dart';
 import 'package:riverpod_2025/future_provider/future_provider.dart';
 import 'package:riverpod_2025/future_provider/stream_provider.dart';
 import 'package:riverpod_2025/item_provider.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    final result = ref.watch(multiplierProvider(10));
     print("build");
     return Scaffold(
       appBar: AppBar(title: const Text("Stream Provider")),
@@ -32,22 +33,9 @@ class HomeScreen extends ConsumerWidget {
         child: Icon(Icons.add),
       ),
 
-      body: Consumer(
-        builder: (context, ref ,child){
-          final provider = ref.watch(stockPriceProvider);
-          return Center(
-          child: provider.when(
-          skipLoadingOnRefresh: false,
-          data:
-          (price) => Text(price.toStringAsFixed(2).toString(),
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
-          error: (error, stack) => Text(error.toString()),
-          loading: () => const CircularProgressIndicator(),
-          ),
-          );
-        },
-
-      ),
+      body: Center(
+        child: Text(result.toString(),style: TextStyle(fontSize: 30),),
+      )
     );
 
   }
