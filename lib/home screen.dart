@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_2025/future_provider/future_provider.dart';
+import 'package:riverpod_2025/future_provider/stream_provider.dart';
 import 'package:riverpod_2025/item_provider.dart';
 import 'package:riverpod_2025/provider/favourite_provider.dart';
 import 'package:riverpod_2025/search_provider.dart';
@@ -20,10 +21,10 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final provider = ref.watch(futureProvider);
+
     print("build");
     return Scaffold(
-      appBar: AppBar(title: const Text("Future Provider")),
+      appBar: AppBar(title: const Text("Stream Provider")),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           ref.invalidate(futureProvider);
@@ -31,19 +32,21 @@ class HomeScreen extends ConsumerWidget {
         child: Icon(Icons.add),
       ),
 
-      body: Center(
-        child: provider.when(
+      body: Consumer(
+        builder: (context, ref ,child){
+          final provider = ref.watch(stockPriceProvider);
+          return Center(
+          child: provider.when(
           skipLoadingOnRefresh: false,
           data:
-              (value) => ListView.builder(
-                itemCount: value.length,
-                itemBuilder: (context, index) {
-                  return Text(value[index].toString());
-                },
-              ),
+          (price) => Text(price.toStringAsFixed(2).toString(),
+          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),),
           error: (error, stack) => Text(error.toString()),
           loading: () => const CircularProgressIndicator(),
-        ),
+          ),
+          );
+        },
+
       ),
     );
 
